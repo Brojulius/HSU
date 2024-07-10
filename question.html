@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            margin: 0 0 20px 0;
+            color: #666;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        input[type="radio"] {
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #hint, #timer {
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+    <script>
+        const API_KEY = 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE'; // Dein API-Schlüssel
+        const SPREADSHEET_ID = '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc'; // Deine Spreadsheet-ID
+        const SHEET_NAME = 'HSU Campusrallye'; // Der Name deines Sheets
+
+        async function fetchQuestion(questionNumber) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A${questionNumber}:J${questionNumber}?key=${API_KEY}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.values[0];
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function checkAccess() {
+            const key = getQueryParam('key');
+            if (key !== 'secret123') {
+                alert('Ungültiger Zugriff! Bitte scannen Sie den QR-Code.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function loadQuestion() {
+            const currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
+            const questionData = await fetchQuestion(currentQuestion);
+            const [question1, ...answers1, hintForward, hintBackward, question2, ...answers2] = questionData;
+            const correctAnswer1 = answers1[0];
+            const correctAnswer2 = answers2[0];
+            shuffleArray(answers1);
+            shuffleArray(answers2);
+
+            document.getElementById('question1-text').innerText = question1;
+            const answersContainer1 = document.getElementById('answers1');
+            answersContainer1.innerHTML = '';
+            answers1.forEach(answer => {
+                const answerElement = document.createElement('div');
+                answerElement.innerHTML = `<input type="radio" name="answer1" value="${answer}"> ${answer}`;
+                answersContainer1.appendChild(answerElement);
+            });
+            document.getElementById('correct-answer1').value = correctAnswer1;
+
+            document.getElementById('question2-text').innerText = question2;
+            const answersContainer2 = document.getElementById('answers2');
+            answersContainer2.innerHTML = '';
+            answers2.forEach(answer => {
+                const answerElement = document.createElement('div');
+                answerElement.innerHTML = `<input type="radio" name="answer2" value="${answer}"> ${answer}`;
+                answersContainer2.appendChild(answerElement);
+            });
+            document.getElementById('correct-answer2').value = correctAnswer2;
+
+            const direction = localStorage.getItem('direction');
+            if (direction === 'forward') {
+                document.getElementById('hint').innerText = hintForward;
+            } else {
+                document.getElementById('hint').innerText = hintBackward;
+            }
+        }
+
+        function submitAnswers() {
+            const groupName = localStorage.getItem('groupName');
+            const selectedAnswer1 = document.querySelector('input[name="answer1"]:checked').value;
+            const selectedAnswer2 = document.querySelector('input[name="answer2"]:checked').value;
+            const correctAnswer1 = document.getElementById('correct-answer1').value;
+            const correctAnswer2 = document.getElementById('correct-answer2').value;
+            const formUrl = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse"; // Ersetze durch deine Form URL
+            const data1 = new URLSearchParams();
+            const data2 = new URLSearchParams();
+            data1.append("entry.GROUPNAME_ENTRY_ID", groupName);
+            data1.append("entry.ANSWER_ENTRY_ID", selectedAnswer1);
+            data2.append("entry.GROUPNAME_ENTRY_ID", groupName);
+            data2.append("entry.ANSWER_ENTRY_ID", selectedAnswer2);
+
+            Promise.all([
+                fetch(formUrl, {
+                    method: 'POST',
+                    body: data1,
+                }),
+                fetch(formUrl, {
+                    method: 'POST',
+                    body: data2,
+                })
+            ]).then(() => {
+                document.getElementById('hint').style.display = 'block';
+                const direction = localStorage.getItem('direction');
+                const nextQuestionNumber = direction === 'forward' ? parseInt(localStorage.getItem('currentQuestion')) + 1 : parseInt(localStorage.getItem('currentQuestion')) - 1;
+                localStorage.setItem('currentQuestion', nextQuestionNumber);
+                setTimeout(() => {
+                    window.location.href = `question.html?key=secret123`;
+                }, 2000); // Weiterleitung nach 2 Sekunden
+            });
+        }
+
+        function updateTimer() {
+            const startTime = parseInt(localStorage.getItem('startTime'));
+            const elapsed = new Date().getTime() - startTime;
+            const remaining = 1500000 - elapsed;
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            document.getElementById('timer').innerText = `Verbleibende Zeit: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (remaining <= 0) {
+                alert('Die Zeit ist abgelaufen! Bitte kehren Sie zum Startpunkt zurück.');
+                window.location.href = 'index.html';
+            } else {
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAccess();
+            loadQuestion();
+            updateTimer();
+        });
+    </script>
+</head>
+<body>
+    <h1>Fragen</h1>
+    <p id="question1-text">Lade Frage 1...</p>
+    <form>
+        <div id="answers1"></div>
+        <input type="hidden" id="correct-answer1">
+        <p id="question2-text">Lade Frage 2...</p>
+        <div id="answers2"></div>
+        <input type="hidden" id="correct-answer2">
+        <button type="button" onclick="submitAnswers()">Antworten einreichen</button>
+    </form>
+    <p id="hint" style="display:none;">Hinweis: Lade Hinweis...</p>
+    <p id="timer">Verbleibende Zeit: 25:00</p>
+</body>
+</html>
