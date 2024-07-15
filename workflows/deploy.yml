@@ -22,12 +22,13 @@ jobs:
         run: npm install
 
       - name: Build the project
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: yourcustomdomain.com # optional if you have a custom domain
+          publish_dir: .
 
