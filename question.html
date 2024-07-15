@@ -76,14 +76,13 @@
                 alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
                 return;
             }
-
-            // Anzahl der QR-Codes aus der letzten Spalte der ersten Zeile
+            console.log('Game Data:', data);
             const numQRCodes = parseInt(data[0][10]);
             console.log(`Number of QR Codes: ${numQRCodes}`);
-
             localStorage.setItem('numQRCodes', numQRCodes);
             localStorage.setItem('gameData', JSON.stringify(data));
         }
+
 
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
