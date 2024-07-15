@@ -60,14 +60,19 @@
         async function fetchSheetData() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
             console.log(`Fetching URL: ${url}`);
-            const response = await fetch(url);
-            if (!response.ok) {
-                console.error(`Error fetching data: ${response.statusText}`);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.error(`Error fetching data: ${response.statusText}`);
+                    return null;
+                }
+                const data = await response.json();
+                console.log(`Data fetched:`, data);
+                return data.values ? data.values : null;
+            } catch (error) {
+                console.error('Fetch error:', error);
                 return null;
             }
-            const data = await response.json();
-            console.log(`Data fetched:`, data);
-            return data.values ? data.values : null;
         }
 
         async function loadGameData() {
@@ -82,7 +87,6 @@
             localStorage.setItem('numQRCodes', numQRCodes);
             localStorage.setItem('gameData', JSON.stringify(data));
         }
-
 
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -222,9 +226,8 @@
         <input type="hidden" id="correct-answer2">
         <button type="button" onclick="submitAnswers()">Antworten einreichen</button>
     </form>
-    <p id="hint" style="display:none;">Hinweis: Lade Hinweis...</p>
+    <p id="hint" style="display:none;">Hinweis: ...</p>
     <p id="timer">Verbleibende Zeit: 25:00</p>
 </body>
 </html>
-
 
