@@ -57,24 +57,31 @@
         const SPREADSHEET_ID = '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc'; // Deine Spreadsheet-ID
         const SHEET_NAME = 'HSU Campusrallye'; // Der Name deines Sheets
 
-        async function fetchQuestion(questionNumber) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A${questionNumber + 1}:J${questionNumber + 1}?key=${API_KEY}`;
-            console.log(`Fetching URL: ${url}`); // Konsolenausgabe der URL
+        async function fetchSheetData() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+            console.log(`Fetching URL: ${url}`);
             const response = await fetch(url);
             if (!response.ok) {
                 console.error(`Error fetching data: ${response.statusText}`);
                 return null;
             }
             const data = await response.json();
-            console.log(`Data fetched:`, data); // Konsolenausgabe der Daten
-            return data.values ? data.values[0] : null;
+            console.log(`Data fetched:`, data);
+            return data.values ? data.values : null;
         }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        async function loadGameData() {
+            const data = await fetchSheetData();
+            if (!data) {
+                alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
+                return;
             }
+
+            // Anzahl der QR-Codes aus der letzten Spalte der ersten Zeile
+            const numQRCodes = parseInt(data[0][10]);
+
+            localStorage.setItem('numQRCodes', numQRCodes);
+            localStorage.setItem('gameData', JSON.stringify(data));
         }
 
         function getQueryParam(param) {
@@ -92,12 +99,20 @@
 
         async function loadQuestion() {
             const currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
-            const questionData = await fetchQuestion(currentQuestion);
+            const gameData = JSON.parse(localStorage.getItem('gameData'));
+            const numQRCodes = parseInt(localStorage.getItem('numQRCodes'));
+
+            if (!gameData || !numQRCodes) {
+                await loadGameData();
+            }
+
+            const questionData = gameData.find(row => parseInt(row[0]) === currentQuestion);
             if (!questionData) {
-                alert('Fehler beim Laden der Fragen. Bitte versuchen Sie es später erneut.');
+                alert('Fehler beim Laden der Frage. Bitte versuchen Sie es später erneut.');
                 return;
             }
-            const [question1, ...answers1, hintForward, hintBackward, question2, ...answers2] = questionData;
+
+            const [questionNum, question1, ...answers1, hintForward, hintBackward, question2, ...answers2] = questionData;
             const correctAnswer1 = answers1[0];
             const correctAnswer2 = answers2[0];
             shuffleArray(answers1);
@@ -181,6 +196,13 @@
             }
         }
 
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             checkAccess();
             loadQuestion();
@@ -203,4 +225,5 @@
     <p id="timer">Verbleibende Zeit: 25:00</p>
 </body>
 </html>
+
 
