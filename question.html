@@ -53,15 +53,21 @@
         }
     </style>
     <script>
-        const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Platzhalter für den API-Schlüssel
+        const API_KEY = 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE'; // Dein API-Schlüssel
         const SPREADSHEET_ID = '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc'; // Deine Spreadsheet-ID
         const SHEET_NAME = 'HSU Campusrallye'; // Der Name deines Sheets
 
         async function fetchQuestion(questionNumber) {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A${questionNumber}:J${questionNumber}?key=${API_KEY}`;
+            console.log(`Fetching URL: ${url}`); // Konsolenausgabe der URL
             const response = await fetch(url);
+            if (!response.ok) {
+                console.error(`Error fetching data: ${response.statusText}`);
+                return null;
+            }
             const data = await response.json();
-            return data.values[0];
+            console.log(`Data fetched:`, data); // Konsolenausgabe der Daten
+            return data.values ? data.values[0] : null;
         }
 
         function shuffleArray(array) {
@@ -87,6 +93,10 @@
         async function loadQuestion() {
             const currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
             const questionData = await fetchQuestion(currentQuestion);
+            if (!questionData) {
+                alert('Fehler beim Laden der Fragen. Bitte versuchen Sie es später erneut.');
+                return;
+            }
             const [question1, ...answers1, hintForward, hintBackward, question2, ...answers2] = questionData;
             const correctAnswer1 = answers1[0];
             const correctAnswer2 = answers2[0];
@@ -191,5 +201,8 @@
     </form>
     <p id="hint" style="display:none;">Hinweis: Lade Hinweis...</p>
     <p id="timer">Verbleibende Zeit: 25:00</p>
+</body>
+</html>
+
 </body>
 </html>
