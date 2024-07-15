@@ -58,7 +58,7 @@
         const SHEET_NAME = 'HSU Campusrallye'; // Der Name deines Sheets
 
         async function fetchQuestion(questionNumber) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A${questionNumber}:J${questionNumber}?key=${API_KEY}`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}!A${questionNumber + 1}:J${questionNumber + 1}?key=${API_KEY}`;
             console.log(`Fetching URL: ${url}`); // Konsolenausgabe der URL
             const response = await fetch(url);
             if (!response.ok) {
@@ -203,3 +203,4 @@
     <p id="timer">Verbleibende Zeit: 25:00</p>
 </body>
 </html>
+
