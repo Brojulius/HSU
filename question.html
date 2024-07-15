@@ -102,12 +102,15 @@
         }
 
         async function loadQuestion() {
+            console.log('Loading question...');
             const currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
             const gameData = JSON.parse(localStorage.getItem('gameData'));
             const numQRCodes = parseInt(localStorage.getItem('numQRCodes'));
-
+            console.log(`Current Question: ${currentQuestion}, Number of QR Codes: ${numQRCodes}`);
+            
             if (!gameData || !numQRCodes) {
                 await loadGameData();
+                gameData = JSON.parse(localStorage.getItem('gameData'));
             }
 
             const questionData = gameData.find(row => parseInt(row[0]) === currentQuestion);
@@ -230,4 +233,3 @@
     <p id="timer">Verbleibende Zeit: 25:00</p>
 </body>
 </html>
-
