@@ -3,7 +3,6 @@ const path = require('path');
 
 const apiKey = process.env.GOOGLE_API_KEY;
 
-const startseitePath = path.join(__dirname, 'Startseite.html');
 const questionPath = path.join(__dirname, 'question.html');
 
 const replaceApiKey = (filePath) => {
@@ -12,5 +11,4 @@ const replaceApiKey = (filePath) => {
     fs.writeFileSync(filePath, updatedContent);
 };
 
-replaceApiKey(startseitePath);
 replaceApiKey(questionPath);
