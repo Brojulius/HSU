@@ -1,18 +1,61 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSU Campusrallye - Setup</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #003366;
+        }
+        button {
+            background-color: #003366;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #002244;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>HSU Campusrallye - Setup</h1>
         <p>Hier können Sie das Google Sheet vorbereiten, um die Fragen und Antworten einzugeben.</p>
-        <button onclick="prepareSheet()">Google Sheet vorbereiten</button>
-        <div id="status"></div>
+        <button onclick="setupGoogleSheet()">Google Sheet vorbereiten</button>
+        <p id="status"></p>
     </div>
-    <script src="setup.js"></script>
+    <script>
+        async function setupGoogleSheet() {
+            try {
+                const response = await fetch('/setup', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('status').textContent = 'Google Sheet wurde erfolgreich vorbereitet.';
+                } else {
+                    document.getElementById('status').textContent = 'Fehler beim Vorbereiten des Google Sheets.';
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = 'Fehler beim Vorbereiten des Google Sheets.';
+            }
+        }
+    </script>
 </body>
 </html>
