@@ -5,60 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fragen - HSU Campusrallye</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            background-color: #002f6c;
-            color: white;
-            padding: 20px 0;
-        }
-
-        #question-container {
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 400px;
-        }
-
-        #timer {
-            margin-top: 20px;
-            font-size: 1.2em;
-        }
-
-        button {
-            background-color: #002f6c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin: 10px;
-        }
-
-        button:hover {
-            background-color: #00509e;
-        }
-    </style>
 </head>
 <body>
-    <h1>HSU Campusrallye</h1>
-    <div id="question-container">
-        <div id="question">Lade Frage...</div>
-        <div id="answers"></div>
-        <div id="timer">Verbleibende Zeit: 25:00</div>
-    </div>
-
+    <header>
+        <img src="hsulogo.png" alt="HSU Logo" id="hsu-logo">
+        <h1>HSU Campusrallye</h1>
+    </header>
+    <main>
+        <div id="question-container">
+            <div id="question">Lade Frage...</div>
+            <div id="answers"></div>
+            <div id="timer">Verbleibende Zeit: 25:00</div>
+        </div>
+    </main>
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
+
 
