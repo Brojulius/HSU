@@ -2,11 +2,13 @@ let timer;
 let currentQuestionIndex = 0;
 let score = 0;
 let questionsData = [];
+const apiKey = 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE';
+const spreadsheetId = '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc';
 
 // Google Sheets API initialisieren
 function initClient() {
     gapi.client.init({
-        apiKey: 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE',
+        apiKey: apiKey,
         discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
     }).then(() => {
         console.log('GAPI client loaded for API');
@@ -31,7 +33,7 @@ function startGame() {
 
 function saveGroupData(groupName, direction) {
     gapi.client.sheets.spreadsheets.values.append({
-        spreadsheetId: '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc',
+        spreadsheetId: spreadsheetId,
         range: 'Blatt1!A1:B1',
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
@@ -48,9 +50,12 @@ function saveGroupData(groupName, direction) {
 }
 
 function loadQuestions() {
+    const direction = localStorage.getItem('direction');
+    const range = direction === 'forward' ? 'Blatt2!A2:J10' : 'Blatt3!A2:J10';
+
     gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc',
-        range: 'HSU Campusrallye!A2:J10',
+        spreadsheetId: spreadsheetId,
+        range: range,
     }).then((response) => {
         questionsData = response.result.values;
         displayQuestion();
@@ -115,11 +120,24 @@ function shuffleArray(array) {
     }
 }
 
+function initializeSheet() {
+    gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: spreadsheetId,
+        range: 'Blatt1!A1:Z1',
+        valueInputOption: 'RAW',
+        resource: {
+            values: [
+                ['Gruppenname', 'Laufrichtung', 'Punkte', 'Frage1', 'Frage2', 'Frage3', 'Frage4']
+            ],
+        },
+    }).then((response) => {
+        console.log('Sheet initialized:', response);
+        alert('Das Google Sheet wurde erfolgreich initialisiert!');
+    }, (error) => {
+        console.error('Error initializing sheet:', error);
+    });
+}
+
 gapi.load('client', initClient);
 
-window.addEventListener('load', () => {
-    if (window.location.pathname.endsWith('question.html')) {
-        loadQuestions();
-    }
-});
 
