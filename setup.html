@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setup Google Sheets</title>
+    <title>Setup - HSU Campusrallye</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Setup Google Sheets</h1>
-    <button onclick="setupSheets()">Google Sheets einrichten</button>
+    <header>
+        <img src="hsulogo.png" alt="HSU Logo" id="hsu-logo">
+        <h1>HSU Campusrallye Setup</h1>
+    </header>
+    <main>
+        <div id="setup-instructions">
+            <h2>Setup der Google Sheets Tabelle</h2>
+            <p>Klicken Sie auf den untenstehenden Button, um die Google Sheets Tabelle zu initialisieren.</p>
+            <button onclick="initializeSheet()">Initialize Sheet</button>
+        </div>
+    </main>
+    <script src="https://apis.google.com/js/api.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
