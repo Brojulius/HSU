@@ -3,76 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSU Spiel</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #333;
-            text-align: center;
-            padding: 20px;
-        }
-        header {
-            margin-bottom: 20px;
-        }
-        img {
-            max-width: 150px;
-        }
-        form {
-            margin-top: 20px;
-        }
-        input, select, button {
-            display: block;
-            margin: 10px auto;
-            padding: 10px;
-            font-size: 16px;
-        }
-    </style>
+    <title>HSU Campusrallye - Startseite</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <img src="hsulogo.png" alt="HSU Logo">
-        <h1>Willkommen zum HSU Spiel</h1>
-        <p>Hier sind die Spielregeln...</p>
-    </header>
-    <form id="start-form">
-        <label for="group-name">Gruppenname:</label>
-        <input type="text" id="group-name" name="group-name" required>
-        
-        <label for="direction">Wähle die Laufrichtung:</label>
-        <select id="direction" name="direction" required>
-            <option value="1">Richtung 1</option>
-            <option value="2">Richtung 2</option>
-        </select>
-        
-        <button type="submit">Starten</button>
-    </form>
-    
-    <script>
-        document.getElementById('start-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const groupName = document.getElementById('group-name').value;
-            const direction = document.getElementById('direction').value;
-
-            // Speichern der Daten im Google Sheet
-            fetch('https://your-google-sheet-api-url', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    groupName: groupName,
-                    direction: direction,
-                    startTime: new Date().toISOString()
-                })
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = 'question.html?group=' + groupName + '&direction=' + direction;
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        });
-    </script>
+    <div class="container">
+        <img src="hsulogo.png" alt="HSU Logo" class="logo">
+        <h1>Willkommen zur HSU Campusrallye!</h1>
+        <p>Bitte geben Sie Ihren Gruppennamen ein und wählen Sie die Laufrichtung:</p>
+        <form id="start-form">
+            <label for="group-name">Gruppenname:</label>
+            <input type="text" id="group-name" name="group-name" required>
+            
+            <label for="direction">Laufrichtung:</label>
+            <select id="direction" name="direction" required>
+                <option value="forward">Vorwärts</option>
+                <option value="backward">Rückwärts</option>
+            </select>
+            
+            <button type="submit">Spiel starten</button>
+        </form>
+        <div id="rules">
+            <h2>Spielregeln</h2>
+            <p>Die Gruppe hat 25 Minuten Zeit, um alle QR-Codes zu finden und die Fragen zu beantworten. Jede Frage hat 5 Antworten, von denen eine richtig ist. Pro QR-Code gibt es zwei Fragen. Für jede richtige Antwort gibt es einen Punkt. Die Hinweise für den nächsten QR-Code werden nach dem Beantworten der Fragen angezeigt.</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
