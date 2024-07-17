@@ -1,6 +1,6 @@
 // setup.js
 
-const API_KEY = 'YOUR_GOOGLE_API_KEY';
+const API_KEY = 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE';
 const SPREADSHEET_ID = '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc';
 
 async function prepareSheet() {
