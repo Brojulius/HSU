@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        header {
+            margin-bottom: 20px;
+        }
+        #timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fragen</h1>
+        <p id="timer">Verbleibende Zeit: 25:00</p>
+    </header>
+    <div id="questions">
+        <!-- Fragen werden hier eingefügt -->
+    </div>
+    <script>
+        const groupName = new URLSearchParams(window.location.search).get('group');
+        const direction = new URLSearchParams(window.location.search).get('direction');
+        const startTime = new Date().getTime();
+        const totalTime = 25 * 60 * 1000; // 25 Minuten in Millisekunden
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const timeLeft = totalTime - (now - startTime);
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').textContent = `Verbleibende Zeit: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert('Zeit abgelaufen!');
+                window.location.href = 'end.html';
+            }
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Abrufen der Fragen und Antworten aus dem Google Sheet
+        fetch(`https://your-google-sheet-api-url/direction${direction}`)
+            .then(response => response.json())
+            .then(data => {
+                const questionsDiv = document.getElementById('questions');
+                data.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.innerHTML = `<p>${q.question}</p>`;
+
+                    // Antworten in zufälliger Reihenfolge anzeigen
+                    const answers = [q.answer1, q.answer2, q.answer3, q.answer4, q.answer5];
+                    answers.sort(() => Math.random() - 0.5);
+                    answers.forEach(answer => {
+                        const button = document.createElement('button');
+                        button.textContent = answer;
+                        button.addEventListener('click', () => handleAnswerClick(index, answer));
+                        questionDiv.appendChild(button);
+                    });
+
+                    questionsDiv.appendChild(questionDiv);
+                });
+            });
+
+        function handleAnswerClick(questionIndex, selectedAnswer) {
+            // Speichern der Antwort und Aktualisieren der Punkte im Google Sheet
+            fetch('https://your-google-sheet-api-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    groupName: groupName,
+                    questionIndex: questionIndex,
+                    selectedAnswer: selectedAnswer,
+                    timestamp: new Date().toISOString()
+                })
+            }).then(response => {
+                if (response.ok) {
+                    // Nächste Frage oder Hinweis anzeigen
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
