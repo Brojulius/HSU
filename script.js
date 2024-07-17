@@ -120,4 +120,28 @@ function submitAnswers() {
 
     // Redirect to the next question
     setTimeout(() => {
-        window.location.href = `question.html?key=secret123
+        window.location.href = `question.html?key=secret123`;
+    }, 2000);
+}
+
+async function savePointsToSheet(groupName, questionNumber, points) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_FORWARD}!A${questionNumber + 1}:append?valueInputOption=RAW&key=${API_KEY}`;
+    const data = {
+        values: [[groupName, points]]
+    };
+
+    await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+async function fetchSheetData(sheetName) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${sheetName}?key=${API_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.values;
+}
