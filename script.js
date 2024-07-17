@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startForm.addEventListener('submit', startGame);
     } else {
         loadQuestion();
+        startTimer();
     }
 });
 
@@ -28,15 +29,15 @@ async function startGame(event) {
     const sheetName = direction === 'forward' ? SHEET_NAME_FORWARD : SHEET_NAME_BACKWARD;
 
     // Save initial data to Google Sheets (direction and groupName)
-    await saveInitialData(groupName, direction);
+    await saveInitialData(groupName, direction, startTime);
 
     window.location.href = `question.html?key=secret123`;
 }
 
-async function saveInitialData(groupName, direction) {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_FORWARD}!A1:B1:append?valueInputOption=RAW&key=${API_KEY}`;
+async function saveInitialData(groupName, direction, startTime) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_FORWARD}!A1:D1:append?valueInputOption=RAW&key=${API_KEY}`;
     const data = {
-        values: [[groupName, direction]]
+        values: [[groupName, direction, 0, startTime, '']]
     };
 
     await fetch(url, {
@@ -144,4 +145,43 @@ async function fetchSheetData(sheetName) {
     const response = await fetch(url);
     const data = await response.json();
     return data.values;
+}
+
+function startTimer() {
+    const startTime = parseInt(localStorage.getItem('startTime'));
+    const endTime = startTime + 25 * 60 * 1000;
+
+    const interval = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const remainingTime = endTime - currentTime;
+
+        if (remainingTime <= 0) {
+            clearInterval(interval);
+            saveEndTime();
+            alert('Zeit abgelaufen! Das Spiel ist beendet.');
+            window.location.href = 'index.html';
+        } else {
+            const minutes = Math.floor(remainingTime / (1000 * 60));
+            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+            document.getElementById('timer').innerText = `Verbleibende Zeit: ${minutes} Minuten und ${seconds} Sekunden`;
+        }
+    }, 1000);
+}
+
+async function saveEndTime() {
+    const groupName = localStorage.getItem('groupName');
+    const endTime = new Date().getTime();
+
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_FORWARD}!A1:E1:append?valueInputOption=RAW&key=${API_KEY}`;
+    const data = {
+        values: [[groupName, endTime]]
+    };
+
+    await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 }
