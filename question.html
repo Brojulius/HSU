@@ -71,6 +71,7 @@
         }
 
         async function loadGameData() {
+            console.log('Loading game data...');
             const data = await fetchSheetData();
             if (!data) {
                 alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
@@ -92,6 +93,7 @@
 
         function checkAccess() {
             const key = getQueryParam('key');
+            console.log(`Access key: ${key}`);
             if (key !== 'secret123') {
                 alert('Ungültiger Zugriff! Bitte scannen Sie den QR-Code.');
                 window.location.href = 'index.html';
@@ -99,11 +101,13 @@
         }
 
         async function loadQuestion() {
+            console.log('Loading question...');
             const currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
             const gameData = JSON.parse(localStorage.getItem('gameData'));
             const numQRCodes = parseInt(localStorage.getItem('numQRCodes'));
 
             if (!gameData || !numQRCodes) {
+                console.log('No game data or QR code number found in local storage. Loading game data...');
                 await loadGameData();
             }
 
@@ -149,6 +153,7 @@
         }
 
         function submitAnswers() {
+            console.log('Submitting answers...');
             const groupName = localStorage.getItem('groupName');
             const selectedAnswer1 = document.querySelector('input[name="answer1"]:checked').value;
             const selectedAnswer2 = document.querySelector('input[name="answer2"]:checked').value;
@@ -183,6 +188,7 @@
         }
 
         function updateTimer() {
+            console.log('Updating timer...');
             const startTime = parseInt(localStorage.getItem('startTime'));
             const elapsed = new Date().getTime() - startTime;
             const remaining = 1500000 - elapsed;
@@ -206,10 +212,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Document loaded');
+            console.log('Document loaded...');
             checkAccess();
-            loadQuestion();
+            const startTime = new Date().getTime();
+            localStorage.setItem('startTime', startTime);
             updateTimer();
+            loadQuestion();
         });
     </script>
 </head>
