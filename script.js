@@ -41,3 +41,4 @@ function saveGroupData(groupName, direction) {
 }
 
 gapi.load('client', initClient);
+
