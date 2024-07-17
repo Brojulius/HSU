@@ -8,8 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Cleanup old build files
+        run: rm -rf ./build || true  # Adjust the directory based on your project structure
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -30,5 +32,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          keep_files: false  # Ensure previous files are not kept
+          publish_dir: ./
+          keep_files: false  # Ensure no old files are kept to prevent conflicts
+          cname: ''  # Set CNAME to empty if you are not using a custom domain
