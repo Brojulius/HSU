@@ -1,12 +1,9 @@
-// build.js
 const fs = require('fs');
 const path = require('path');
 
 const apiKey = process.env.GOOGLE_API_KEY;
 
 const questionPath = path.join(__dirname, 'question.html');
-const indexPath = path.join(__dirname, 'index.html');
-const scriptPath = path.join(__dirname, 'script.js');
 
 const replaceApiKey = (filePath) => {
     const content = fs.readFileSync(filePath, 'utf-8');
@@ -15,5 +12,3 @@ const replaceApiKey = (filePath) => {
 };
 
 replaceApiKey(questionPath);
-replaceApiKey(indexPath);
-replaceApiKey(scriptPath);

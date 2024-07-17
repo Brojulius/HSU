@@ -21,7 +21,7 @@
             padding: 20px 0;
         }
 
-        #setup-container, #question-container {
+        #setup-container, .rules {
             margin: 20px auto;
             padding: 20px;
             background-color: white;
@@ -45,12 +45,18 @@
 
         .rules {
             text-align: left;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -71,8 +77,8 @@
         <button onclick="startGame()">Spiel Starten</button>
     </div>
 
+    <script src="https://apis.google.com/js/api.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
-
 
