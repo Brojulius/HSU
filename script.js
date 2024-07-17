@@ -183,5 +183,29 @@ async function saveEndTime() {
         headers: {
             'Content-Type': 'application/json'
         }
+
+function prepareGoogleSheet() {
+    fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:J1:append?valueInputOption=RAW`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            values: [
+                ["Fragennummer", "Frage", "Antwort 1 (richtig)", "Antwort 2", "Antwort 3", "Antwort 4", "Antwort 5", "Hinweis auf nächsten QR-Code (vorwärts)", "Hinweis auf nächsten QR-Code (rückwärts)"]
+            ]
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.updates) {
+            alert('Google Sheet wurde erfolgreich vorbereitet!');
+        } else {
+            throw new Error('Fehler beim Vorbereiten des Google Sheets.');
+        }
+    })
+    .catch(error => {
+        document.getElementById('error').textContent = error.message;
     });
 }
