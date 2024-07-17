@@ -5,9 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSU Campusrallye</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            background-color: #002f6c;
+            color: white;
+            padding: 20px 0;
+        }
+
+        #setup-container, #question-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            background-color: #002f6c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #00509e;
+        }
+
+        .rules {
+            text-align: left;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+        }
+    </style>
 </head>
 <body>
     <h1>HSU Campusrallye</h1>
+    <div class="rules">
+        <h2>Spielregeln</h2>
+        <p>Der Spielleiter nennt die Laufrichtung. Für die gesamte Spielrunde hat die Gruppe 25 Minuten Zeit. Die Zeit beginnt mit der Wahl der Laufrichtung. Jede richtige Antwort gibt einen Punkt. Je QR-Code gibt es zwei Fragen, das heißt je QR-Code kann das Team zwei Punkte erzielen. Das Spiel ist beendet, wenn der QR-Code für das Ende eingescannt worden ist oder wenn die Zeit von 25 Minuten abgelaufen ist.</p>
+    </div>
     <div id="setup-container">
         <label for="group-name">Gruppenname:</label>
         <input type="text" id="group-name" name="group-name" required>
@@ -22,4 +74,5 @@
     <script src="scripts.js"></script>
 </body>
 </html>
+
 
