@@ -3,24 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fragen - HSU Campusrallye</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>HSU Campusrallye - Fragen</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <img src="hsulogo.png" alt="HSU Logo" id="hsu-logo">
-        <h1>HSU Campusrallye</h1>
+        <img src="hsulogo.png" alt="HSU Logo" class="logo" id="hsu-logo">
+        <h1>HSU Campusrallye - Fragen</h1>
     </header>
     <main>
         <div id="question-container">
-            <div id="question">Lade Frage...</div>
-            <div id="answers"></div>
-            <div id="timer">Verbleibende Zeit: 25:00</div>
+            <h2>Frage 1</h2>
+            <p id="question1"></p>
+            <ul id="answers1"></ul>
+
+            <h2>Frage 2</h2>
+            <p id="question2"></p>
+            <ul id="answers2"></ul>
+            
+            <button id="next-question">Nächste Frage</button>
+        </div>
+        <div id="timer">
+            <h2>Verbleibende Zeit: <span id="time-left">25:00</span></h2>
         </div>
     </main>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script src="scripts.js"></script>
+    <script src="questionScript.js"></script>
 </body>
 </html>
-
 
