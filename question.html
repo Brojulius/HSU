@@ -60,19 +60,14 @@
         async function fetchSheetData() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
             console.log(`Fetching URL: ${url}`);
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    console.error(`Error fetching data: ${response.statusText}`);
-                    return null;
-                }
-                const data = await response.json();
-                console.log(`Data fetched:`, data);
-                return data.values ? data.values : null;
-            } catch (error) {
-                console.error('Fetch error:', error);
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error(`Error fetching data: ${response.statusText}`);
                 return null;
             }
+            const data = await response.json();
+            console.log(`Data fetched:`, data);
+            return data.values ? data.values : null;
         }
 
         async function loadGameData() {
@@ -81,9 +76,11 @@
                 alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
                 return;
             }
-            console.log('Game Data:', data);
+
+            // Anzahl der QR-Codes aus der letzten Spalte der ersten Zeile
             const numQRCodes = parseInt(data[0][10]);
             console.log(`Number of QR Codes: ${numQRCodes}`);
+
             localStorage.setItem('numQRCodes', numQRCodes);
             localStorage.setItem('gameData', JSON.stringify(data));
         }
@@ -102,15 +99,12 @@
         }
 
         async function loadQuestion() {
-            console.log('Loading question...');
             const currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
             const gameData = JSON.parse(localStorage.getItem('gameData'));
             const numQRCodes = parseInt(localStorage.getItem('numQRCodes'));
-            console.log(`Current Question: ${currentQuestion}, Number of QR Codes: ${numQRCodes}`);
-            
+
             if (!gameData || !numQRCodes) {
                 await loadGameData();
-                gameData = JSON.parse(localStorage.getItem('gameData'));
             }
 
             const questionData = gameData.find(row => parseInt(row[0]) === currentQuestion);
@@ -212,6 +206,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('Document loaded');
             checkAccess();
             loadQuestion();
             updateTimer();
@@ -224,12 +219,15 @@
     <form>
         <div id="answers1"></div>
         <input type="hidden" id="correct-answer1">
-        <p id="question2-text">Lade Frage 2...</p>
+    </form>
+    <p id="question2-text">Lade Frage 2...</p>
+    <form>
         <div id="answers2"></div>
         <input type="hidden" id="correct-answer2">
-        <button type="button" onclick="submitAnswers()">Antworten einreichen</button>
     </form>
-    <p id="hint" style="display:none;">Hinweis: ...</p>
+    <button onclick="submitAnswers()">Antworten einreichen</button>
+    <p id="hint" style="display:none;"></p>
     <p id="timer">Verbleibende Zeit: 25:00</p>
 </body>
 </html>
+
