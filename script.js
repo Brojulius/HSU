@@ -1,3 +1,8 @@
+let timer;
+let currentQuestionIndex = 0;
+let score = 0;
+let questionsData = [];
+
 // Google Sheets API initialisieren
 function initClient() {
     gapi.client.init({
@@ -110,20 +115,10 @@ function shuffleArray(array) {
     }
 }
 
-function setupSheets() {
-    // Setup code to create and initialize the Google Sheets structure
-    alert('Google Sheets eingerichtet');
-}
+gapi.load('client', initClient);
 
-// Google API initialisieren
-gapi.load('client', () => {
-    gapi.client.init({
-        apiKey: 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE',
-        discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-    }).then(() => {
-        if (window.location.pathname.endsWith('question.html')) {
-            loadQuestions();
-        }
-    });
+window.addEventListener('load', () => {
+    if (window.location.pathname.endsWith('question.html')) {
+        loadQuestions();
+    }
 });
-
