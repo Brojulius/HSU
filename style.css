@@ -1,72 +1,36 @@
-/* style.css */
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #f4f4f4;
+    color: #333;
+    text-align: center;
     margin: 0;
     padding: 0;
 }
 
-.container {
-    max-width: 600px;
-    margin: 50px auto;
+h1 {
+    background-color: #002f6c;
+    color: white;
+    padding: 20px 0;
+}
+
+#setup-container, #question-container {
+    margin: 20px auto;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.logo {
-    display: block;
-    margin: 0 auto 20px;
-}
-
-h1, h2 {
-    text-align: center;
-    color: #333;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin: 10px 0 5px;
-}
-
-input, select, button {
-    padding: 10px;
-    margin: 5px 0 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 400px;
 }
 
 button {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #002f6c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     cursor: pointer;
+    margin-top: 20px;
 }
 
 button:hover {
-    background-color: #0056b3;
-}
-
-#rules {
-    margin-top: 20px;
-}
-
-#timer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 18px;
-    color: #333;
-}
-
-#hint {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 18px;
-    color: #007bff;
+    background-color: #00509e;
 }
