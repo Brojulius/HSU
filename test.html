@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Google Sheets Data</h1>
+    <div id="sheet-data"></div>
+
+    <script>
+        // URL zu deinem veröffentlichten Google Sheet im JSON-Format
+        const sheetUrl = 'https://spreadsheets.google.com/feeds/list/YOUR_SPREADSHEET_ID/od6/public/values?alt=json';
+
+        // Funktion, um Daten aus dem Google Sheet zu laden und anzuzeigen
+        async function loadSheetData() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.json();
+                const entries = data.feed.entry;
+
+                // Extrahiere die Daten aus dem Google Sheet
+                const sheetData = entries.map(entry => {
+                    const row = {};
+                    for (const key in entry) {
+                        if (key.startsWith('gsx$')) {
+                            row[key.replace('gsx$', '')] = entry[key].$t;
+                        }
+                    }
+                    return row;
+                });
+
+                displaySheetData(sheetData);
+            } catch (error) {
+                console.error('Error loading sheet data:', error);
+            }
+        }
+
+        // Funktion, um die Daten im HTML anzuzeigen
+        function displaySheetData(data) {
+            const sheetDataDiv = document.getElementById('sheet-data');
+
+            // Erstelle eine Tabelle
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            // Tabellenkopf
+            const headerRow = document.createElement('tr');
+            const headers = Object.keys(data[0]);
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            // Tabellendaten
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            sheetDataDiv.appendChild(table);
+        }
+
+        // Daten laden, wenn die Seite geladen wird
+        window.onload = loadSheetData;
+    </script>
+</body>
+</html>
