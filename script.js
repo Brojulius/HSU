@@ -1,6 +1,6 @@
 // script.js
 
-const API_KEY = 'AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE';
+const API_KEY = 'YOUR_GOOGLE_API_KEY';
 const SPREADSHEET_ID = '1LIzHl56mbSOb6HW30PDNAve_ONXTfYkLuDlL13p-Nwc';
 const SHEET_NAME_FORWARD = 'Sheet2';
 const SHEET_NAME_BACKWARD = 'Sheet3';
