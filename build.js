@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const apiKey = AIzaSyAU8dBB-H49p1YHV0Y5_01AXZiO2gjATFE;
+const apiKey = process.env.GOOGLE_API_KEY;
 
 const questionPath = path.join(__dirname, 'question.html');
 const indexPath = path.join(__dirname, 'index.html');
